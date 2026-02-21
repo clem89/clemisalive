@@ -20,10 +20,9 @@ public class Enemy : MonoBehaviour
         _currentHealth = maxHealth;
     }
 
-    void Start()
+    public void Initialize(Transform player)
     {
-        var playerObj = GameObject.FindWithTag("Player");
-        if (playerObj != null) _player = playerObj.transform;
+        _player = player;
     }
 
     void FixedUpdate()
@@ -31,6 +30,7 @@ public class Enemy : MonoBehaviour
         if (_player == null) return;
         Vector2 dir = ((Vector2)_player.position - _rb.position).normalized;
         _rb.linearVelocity = dir * moveSpeed;
+        _rb.SetRotation(Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f);
     }
 
     void OnCollisionStay2D(Collision2D col)
