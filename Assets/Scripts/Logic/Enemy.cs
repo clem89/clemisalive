@@ -33,10 +33,10 @@ public class Enemy : MonoBehaviour
         _rb.SetRotation(Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f);
     }
 
-    void OnCollisionStay2D(Collision2D col)
+    void OnTriggerStay2D(Collider2D col)
     {
         if (Time.time < _nextDamageTime) return;
-        if (col.gameObject.TryGetComponent<Character>(out var player))
+        if (col.TryGetComponent<Character>(out var player))
         {
             player.TakeDamage(contactDamage);
             _nextDamageTime = Time.time + damageInterval;
@@ -53,6 +53,7 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         // TODO: 파티클 + 보상 드랍
+        GameManager.Instance.AddKill();
         Destroy(gameObject);
     }
 }

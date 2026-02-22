@@ -117,7 +117,7 @@ public class Character : MonoBehaviour
 
     void Die()
     {
-        // TODO: 게임오버 화면 연결
         gameObject.SetActive(false);
+        GameManager.Instance.OnPlayerDied();
     }
 }

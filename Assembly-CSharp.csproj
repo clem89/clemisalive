@@ -49,12 +49,15 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.8f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Logic\GameManager.cs" />
     <Compile Include="Assets\Scripts\Logic\BulletPool.cs" />
     <Compile Include="Assets\Scripts\Logic\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Logic\Character.cs" />
     <Compile Include="Assets\Scripts\Logic\InfiniteBackground.cs" />
     <Compile Include="Assets\Scripts\Logic\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Logic\Enemy.cs" />
+    <Compile Include="Assets\Scripts\UI\GameOverUI.cs" />
+    <Compile Include="Assets\Scripts\UI\HudUI.cs" />
     <Compile Include="Assets\Scripts\Logic\Bullet.cs" />
   </ItemGroup>
   <ItemGroup>

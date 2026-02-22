@@ -48,8 +48,8 @@ public class InfiniteBackground : MonoBehaviour
 
     void LateUpdate()
     {
-        float ox = Mathf.Floor(_cam.position.x / tileWorldSize) * tileWorldSize;
-        float oy = Mathf.Floor(_cam.position.y / tileWorldSize) * tileWorldSize;
+        float ox = Mathf.Round(_cam.position.x / tileWorldSize) * tileWorldSize;
+        float oy = Mathf.Round(_cam.position.y / tileWorldSize) * tileWorldSize;
 
         // 그리드 원점이 바뀔 때(타일 경계를 넘을 때)만 재배치
         if (ox == _lastOx && oy == _lastOy) return;
