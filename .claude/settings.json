@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"D:/dev/clemisalive/Assets/Scripts/Logic/EnemySpawner.cs\":*)"
+    ],
+    "additionalDirectories": [
+      "d:\\dev\\clemisalive",
+      "D:\\dev\\clemisalive\\.claude"
+    ]
+  }
+}

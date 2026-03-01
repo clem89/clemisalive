@@ -15,7 +15,15 @@
       "Bash(dir:*)",
       "Bash(cmd.exe /c \"echo test\")",
       "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"Write-Host ''PS test''\")",
-      "Bash(powershell.exe -ExecutionPolicy Bypass -Command:*)"
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(\"D:/dev/clemisalive/Assets/Scripts/Logic/LevelSystem.cs\":*)",
+      "Bash(\"D:/dev/clemisalive/Assets/Scripts/Logic/Character.cs\":*)",
+      "Bash(\"D:/dev/clemisalive/Assets/Scripts/Logic/Bullet.cs\":*)",
+      "Bash(\"D:/dev/clemisalive/Assets/Scripts/Logic/BulletPool.cs\":*)",
+      "Bash(\"D:/dev/clemisalive/Assets/Scripts/Logic/Enemy.cs\":*)"
     ]
   }
 }
