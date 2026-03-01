@@ -46,14 +46,12 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _currentHealth -= amount;
-        // TODO: 히트 플래시 효과
         if (_currentHealth <= 0) Die();
     }
 
     void Die()
     {
-        // TODO: 파티클 + 보상 드랍
-        GameManager.Instance.AddKill();
+        GameManager.Instance.OnEnemyKilled();
         Destroy(gameObject);
     }
 }

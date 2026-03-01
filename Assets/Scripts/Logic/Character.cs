@@ -27,6 +27,14 @@ public class Character : MonoBehaviour
     Rigidbody2D _rb;
     Camera _camera;
 
+    // Runtime stats
+    float _rtMoveSpeed;
+    float _rtDashCooldown;
+    float _rtFireRate;
+    int _rtBulletDamage = 20;
+    float _rtBulletSpeed = 12f;
+    int _rtPierceCount = 0;
+
     public int CurrentHealth => _currentHealth;
     public int MaxHealth => maxHealth;
 
@@ -35,6 +43,9 @@ public class Character : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _camera = Camera.main;
         _currentHealth = maxHealth;
+        _rtMoveSpeed = moveSpeed;
+        _rtDashCooldown = dashCooldown;
+        _rtFireRate = fireRate;
     }
 
     void Update()
@@ -54,7 +65,7 @@ public class Character : MonoBehaviour
         }
         else
         {
-            _rb.linearVelocity = _moveInput * moveSpeed;
+            _rb.linearVelocity = _moveInput * _rtMoveSpeed;
         }
     }
 
@@ -85,23 +96,20 @@ public class Character : MonoBehaviour
     void TryShoot()
     {
         if (Time.time < _nextFireTime) return;
-        _nextFireTime = Time.time + fireRate;
+        _nextFireTime = Time.time + _rtFireRate;
 
         Transform spawnPoint = firePoint != null ? firePoint : transform;
-        BulletPool.Instance.Get(spawnPoint.position, spawnPoint.rotation);
+        BulletPool.Instance.Get(spawnPoint.position, spawnPoint.rotation, _rtBulletDamage, _rtBulletSpeed, _rtPierceCount);
     }
 
     void HandleDash()
     {
-        // wasPressedThisFrame: 누른 순간 단 1프레임만 true → 대시가 1번만 발동됨
-        // isPressed 였다면 꾹 누르는 동안 쿨다운마다 재발동돼버림
         if (!Keyboard.current.spaceKey.wasPressedThisFrame) return;
         if (Time.time < _dashCooldownEnd || _isDashing) return;
 
         _isDashing = true;
         _dashEndTime = Time.time + dashDuration;
-        _dashCooldownEnd = Time.time + dashCooldown;
-        // sqrMagnitude: 크기의 제곱(√ 연산 없음) → 0인지 아닌지만 판별할 때 magnitude보다 빠름
+        _dashCooldownEnd = Time.time + _rtDashCooldown;
         _dashDirection = _moveInput.sqrMagnitude > 0
             ? _moveInput.normalized
             : (Vector2)transform.up;
@@ -109,10 +117,42 @@ public class Character : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (_isDashing) return; // 대시 중 무적
+        if (_isDashing) return;
 
         _currentHealth -= amount;
         if (_currentHealth <= 0) Die();
+    }
+
+    public void ApplyUpgrade(UpgradeType type)
+    {
+        switch (type)
+        {
+            case UpgradeType.MaxHp:
+                maxHealth += 20;
+                _currentHealth = Mathf.Min(_currentHealth + 20, maxHealth);
+                break;
+            case UpgradeType.HpRestore:
+                _currentHealth = Mathf.Min(_currentHealth + Mathf.RoundToInt(maxHealth * 0.3f), maxHealth);
+                break;
+            case UpgradeType.MoveSpeed:
+                _rtMoveSpeed *= 1.1f;
+                break;
+            case UpgradeType.FireRate:
+                _rtFireRate *= 0.85f;
+                break;
+            case UpgradeType.BulletDamage:
+                _rtBulletDamage = Mathf.RoundToInt(_rtBulletDamage * 1.2f);
+                break;
+            case UpgradeType.BulletSpeed:
+                _rtBulletSpeed *= 1.15f;
+                break;
+            case UpgradeType.Pierce:
+                _rtPierceCount++;
+                break;
+            case UpgradeType.DashCooldown:
+                _rtDashCooldown *= 0.8f;
+                break;
+        }
     }
 
     void Die()

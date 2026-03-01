@@ -7,18 +7,32 @@ public class Bullet : MonoBehaviour
     [SerializeField] float lifetime = 3f;
     [SerializeField] int pierceCount = 0;
 
+    int _rtDamage;
+    float _rtSpeed;
+    int _rtPierce;
     int _pierceRemaining;
     float _expireTime;
 
     void OnEnable()
     {
-        _pierceRemaining = pierceCount;
+        _rtDamage = damage;
+        _rtSpeed = speed;
+        _rtPierce = pierceCount;
+        _pierceRemaining = _rtPierce;
         _expireTime = Time.time + lifetime;
+    }
+
+    public void Init(int dmg, float spd, int pierce)
+    {
+        _rtDamage = dmg;
+        _rtSpeed = spd;
+        _rtPierce = pierce;
+        _pierceRemaining = pierce;
     }
 
     void Update()
     {
-        transform.Translate(Vector2.up * speed * Time.deltaTime);
+        transform.Translate(Vector2.up * _rtSpeed * Time.deltaTime);
 
         if (Time.time >= _expireTime)
             ReturnToPool();
@@ -28,7 +42,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(_rtDamage);
             if (_pierceRemaining <= 0)
                 ReturnToPool();
             else
