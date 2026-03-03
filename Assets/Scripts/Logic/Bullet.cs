@@ -42,7 +42,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.TakeDamage(_rtDamage);
+            enemy.TakeDamage(_rtDamage, transform.up);
             if (_pierceRemaining <= 0)
                 ReturnToPool();
             else

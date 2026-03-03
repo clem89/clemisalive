@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour
     float _nextDamageTime;
     Transform _player;
     Rigidbody2D _rb;
-
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -43,14 +42,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, Vector2 knockbackDir = default)
     {
         _currentHealth -= amount;
-        if (_currentHealth <= 0) Die();
+
+        if (_currentHealth <= 0)
+        {
+            Die();
+        }
+        else if (knockbackDir != Vector2.zero)
+        {
+            _rb.AddForce(knockbackDir * 5f, ForceMode2D.Impulse);
+        }
     }
 
     void Die()
     {
+        CameraFollow.Instance?.Shake(0.2f, 0.2f);
         GameManager.Instance.OnEnemyKilled();
         Destroy(gameObject);
     }

@@ -26,7 +26,6 @@ public class Character : MonoBehaviour
     Vector2 _dashDirection;
     Rigidbody2D _rb;
     Camera _camera;
-
     // Runtime stats
     float _rtMoveSpeed;
     float _rtDashCooldown;
@@ -120,6 +119,7 @@ public class Character : MonoBehaviour
         if (_isDashing) return;
 
         _currentHealth -= amount;
+        CameraFollow.Instance?.Shake(0.15f, 0.12f);
         if (_currentHealth <= 0) Die();
     }
 
