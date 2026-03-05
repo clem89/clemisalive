@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent<Enemy>(out var enemy))
+        if (other.TryGetComponent<EnemyBase>(out var enemy))
         {
             enemy.TakeDamage(_rtDamage, transform.up);
             if (_pierceRemaining <= 0)

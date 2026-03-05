@@ -1988,7 +1988,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 479651dda01c94548bb12042d570fe5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefab: {fileID: 6205520843029554124, guid: e727e6217bc1dd245a9040e2bb5caed4, type: 3}
+  enemyTypes:
+  - prefab: {fileID: 6205520843029554124, guid: ccefff46853f0fc48bbab8611cdd6fc9, type: 3}
+    weight: 30
+    unlockTime: 0
+  - prefab: {fileID: 5849763421344759086, guid: f0116aa93aa2ebc4fb1a0e9859cd488e, type: 3}
+    weight: 20
+    unlockTime: 10
+  - prefab: {fileID: 1376371356451561167, guid: 4c4d5d4b9011d134c83a0f684fdd2315, type: 3}
+    weight: 15
+    unlockTime: 20
+  - prefab: {fileID: -8580075901662473563, guid: aabc8b960ea42db4180944fa8bff1d3a, type: 3}
+    weight: 10
+    unlockTime: 30
   enemyContainer: {fileID: 961848987}
   spawnRadius: 12
   initialInterval: 2
