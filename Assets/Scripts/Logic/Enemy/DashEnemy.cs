@@ -122,4 +122,16 @@ public class DashEnemy : EnemyBase
             _spriteRenderer.color = _originalColor;
         base.Die();
     }
+
+    protected override void OnReturnToPool()
+    {
+        base.OnReturnToPool();
+        _state = State.Walking;
+        _stateTimer = 0f;
+        _cooldownTimer = dashCooldown;
+        _blinkTimer = 0f;
+        if (_spriteRenderer != null)
+            _spriteRenderer.color = _originalColor;
+        rb.linearVelocity = Vector2.zero;
+    }
 }

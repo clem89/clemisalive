@@ -54,7 +54,13 @@ public class RangedEnemy : EnemyBase
         Transform spawnPoint = firePoint != null ? firePoint : transform;
         Vector2 dir = ((Vector2)player.position - (Vector2)spawnPoint.position).normalized;
 
-        var bullet = Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
-        bullet.Init(bulletDamage, bulletSpeed, dir);
+        EnemyBulletPool.Instance?.Get(spawnPoint.position, bulletDamage, bulletSpeed, dir);
+    }
+
+    protected override void OnReturnToPool()
+    {
+        base.OnReturnToPool();
+        _nextFireTime = 0f;
+        rb.linearVelocity = Vector2.zero;
     }
 }

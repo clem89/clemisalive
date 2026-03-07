@@ -12,6 +12,8 @@ public class EnemySpawnEntry
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static EnemySpawner Instance { get; private set; }
+
     [Header("Enemy Types")]
     [SerializeField] List<EnemySpawnEntry> enemyTypes;
 
@@ -23,10 +25,21 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float initialInterval = 2f;
     [SerializeField] float minInterval = 0.3f;
     [SerializeField] float difficultyRate = 0.02f;
+    [SerializeField] int maxActiveEnemies = 50;
 
     Transform _player;
     float _currentInterval;
     float _nextSpawnTime;
+    readonly List<EnemySpawnEntry> _validEnemies = new();
+
+    // Pooling
+    readonly Dictionary<string, Queue<EnemyBase>> _pools = new();
+    readonly Dictionary<int, string> _instanceToPoolKey = new();
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -52,16 +65,19 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
+        // Check max enemy limit
+        if (_instanceToPoolKey.Count >= maxActiveEnemies) return;
+
         float elapsed = Time.time;
         int totalWeight = 0;
-        var valid = new List<EnemySpawnEntry>();
+        _validEnemies.Clear();
 
         foreach (var e in enemyTypes)
         {
             if (e.prefab != null && elapsed >= e.unlockTime)
             {
                 totalWeight += e.weight;
-                valid.Add(e);
+                _validEnemies.Add(e);
             }
         }
 
@@ -69,9 +85,9 @@ public class EnemySpawner : MonoBehaviour
 
         int roll = Random.Range(0, totalWeight);
         int accumulated = 0;
-        EnemySpawnEntry chosen = valid[0];
+        EnemySpawnEntry chosen = _validEnemies[0];
 
-        foreach (var e in valid)
+        foreach (var e in _validEnemies)
         {
             accumulated += e.weight;
             if (roll < accumulated) { chosen = e; break; }
@@ -79,7 +95,61 @@ public class EnemySpawner : MonoBehaviour
 
         Vector2 dir = Random.insideUnitCircle.normalized;
         Vector3 spawnPos = _player.position + (Vector3)(dir * spawnRadius);
-        var enemy = Instantiate(chosen.prefab, spawnPos, Quaternion.identity, enemyContainer);
-        enemy.Initialize(_player);
+        GetEnemy(chosen.prefab, spawnPos, _player);
+    }
+
+    // Pooling methods
+    public EnemyBase GetEnemy(EnemyBase prefab, Vector3 position, Transform player)
+    {
+        string poolKey = prefab.GetType().Name;
+
+        if (!_pools.ContainsKey(poolKey))
+            _pools[poolKey] = new Queue<EnemyBase>();
+
+        var pool = _pools[poolKey];
+        EnemyBase enemy;
+
+        if (pool.Count == 0)
+        {
+            enemy = Instantiate(prefab, enemyContainer);
+        }
+        else
+        {
+            enemy = pool.Dequeue();
+        }
+
+        enemy.transform.position = position;
+        enemy.gameObject.SetActive(true);
+        enemy.Initialize(player);
+
+        _instanceToPoolKey[enemy.GetInstanceID()] = poolKey;
+
+        return enemy;
+    }
+
+    public void ReturnEnemy(EnemyBase enemy)
+    {
+        if (enemy == null) return;
+
+        int instanceId = enemy.GetInstanceID();
+
+        if (!_instanceToPoolKey.ContainsKey(instanceId))
+        {
+            Destroy(enemy.gameObject);
+            return;
+        }
+
+        string poolKey = _instanceToPoolKey[instanceId];
+
+        // Remove from active tracking
+        _instanceToPoolKey.Remove(instanceId);
+
+        enemy.gameObject.SetActive(false);
+        enemy.transform.SetParent(enemyContainer);
+
+        if (!_pools.ContainsKey(poolKey))
+            _pools[poolKey] = new Queue<EnemyBase>();
+
+        _pools[poolKey].Enqueue(enemy);
     }
 }

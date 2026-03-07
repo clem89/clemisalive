@@ -120,6 +120,8 @@ public class Character : MonoBehaviour
 
         _currentHealth -= amount;
         CameraFollow.Instance?.Shake(0.15f, 0.12f);
+        HudUI.Instance?.ShakeHealthBar();
+
         if (_currentHealth <= 0) Die();
     }
 

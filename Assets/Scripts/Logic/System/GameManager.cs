@@ -35,6 +35,10 @@ public class GameManager : MonoBehaviour
 
     public void TriggerLevelUp()
     {
+        // Spawn level up effect
+        if (Player != null)
+            LevelUpEffect.Create(Player.transform.position);
+
         Time.timeScale = 0f;
         var options = PickRandomUpgrades(3);
         levelUpUI.Show(options);

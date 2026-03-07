@@ -40,8 +40,14 @@ public class SummonerEnemy : EnemyBase
         {
             Vector2 offset = Random.insideUnitCircle * summonRadius;
             Vector3 spawnPos = transform.position + (Vector3)offset;
-            var minion = Instantiate(minionPrefab, spawnPos, Quaternion.identity, transform.parent);
-            minion.Initialize(player);
+            var minion = EnemySpawner.Instance?.GetEnemy(minionPrefab, spawnPos, player);
         }
+    }
+
+    protected override void OnReturnToPool()
+    {
+        base.OnReturnToPool();
+        _nextSummonTime = 0f;
+        rb.linearVelocity = Vector2.zero;
     }
 }
