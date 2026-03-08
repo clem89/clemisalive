@@ -36,6 +36,8 @@ public class EnemySpawner : MonoBehaviour
     readonly Dictionary<string, Queue<EnemyBase>> _pools = new();
     readonly Dictionary<int, string> _instanceToPoolKey = new();
 
+    bool _isBossActive;
+
     void Awake()
     {
         Instance = this;
@@ -63,8 +65,12 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    public void SetBossActive(bool active) => _isBossActive = active;
+
     void SpawnEnemy()
     {
+        if (_isBossActive) return;
+
         // Check max enemy limit
         if (_instanceToPoolKey.Count >= maxActiveEnemies) return;
 

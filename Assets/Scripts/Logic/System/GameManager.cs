@@ -7,12 +7,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameOverUI gameOverUI;
     [SerializeField] LevelUpUI levelUpUI;
 
+    [Header("Boss Settings")]
+    [SerializeField] BossEnemy bossPrefab;
+    [SerializeField] float bossSpawnInterval = 60f;
+    [SerializeField] int bossKillXpReward = 100;
+
     public float SurvivalTime { get; private set; }
     public int KillCount { get; private set; }
     public Character Player { get; private set; }
     public LevelSystem PlayerLevel { get; private set; }
 
     bool _isGameOver;
+    float _nextBossTime;
+    BossEnemy _activeBoss;
 
     void Awake()
     {
@@ -21,10 +28,48 @@ public class GameManager : MonoBehaviour
         PlayerLevel = Player.GetComponent<LevelSystem>();
     }
 
+    void Start()
+    {
+        _nextBossTime = bossSpawnInterval;
+    }
+
     void Update()
     {
         if (!_isGameOver)
+        {
             SurvivalTime += Time.deltaTime;
+            CheckBossSpawn();
+        }
+    }
+
+    void CheckBossSpawn()
+    {
+        if (_activeBoss != null) return;
+        if (bossPrefab == null) return;
+        if (SurvivalTime >= _nextBossTime)
+        {
+            SpawnBoss();
+            _nextBossTime += bossSpawnInterval;
+        }
+    }
+
+    void SpawnBoss()
+    {
+        EnemySpawner.Instance?.SetBossActive(true);
+        Vector2 dir = Random.insideUnitCircle.normalized;
+        Vector3 spawnPos = Player.transform.position + (Vector3)(dir * 12f);
+        _activeBoss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+        _activeBoss.Initialize(Player.transform);
+        HudUI.Instance?.ShowBossHp(_activeBoss);
+    }
+
+    public void OnBossKilled()
+    {
+        _activeBoss = null;
+        EnemySpawner.Instance?.SetBossActive(false);
+        HudUI.Instance?.HideBossHp();
+        KillCount++;
+        PlayerLevel.AddXP(bossKillXpReward);
     }
 
     public void OnEnemyKilled()

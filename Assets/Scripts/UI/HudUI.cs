@@ -16,13 +16,21 @@ public class HudUI : MonoBehaviour
     [SerializeField] float shakeDuration = 0.2f;
     [SerializeField] float shakeMagnitude = 10f;
 
+    [Header("Boss HP")]
+    [SerializeField] GameObject bossHpGroup;
+    [SerializeField] Slider bossHpSlider;
+    [SerializeField] TextMeshProUGUI bossHpText;
+
     Vector3 _hpSliderOriginalPos;
+    BossEnemy _trackedBoss;
 
     void Awake()
     {
         Instance = this;
         if (hpSlider != null)
             _hpSliderOriginalPos = hpSlider.transform.localPosition;
+        if (bossHpGroup != null)
+            bossHpGroup.SetActive(false);
     }
 
     void Update()
@@ -38,6 +46,26 @@ public class HudUI : MonoBehaviour
         var lvl = GameManager.Instance.PlayerLevel;
         xpSlider.value = (float)lvl.CurrentXP / lvl.XpToNextLevel;
         levelText.text = "Lv." + lvl.Level;
+
+        if (_trackedBoss != null && bossHpSlider != null)
+        {
+            float ratio = (float)_trackedBoss.CurrentHealth / _trackedBoss.MaxHealth;
+            bossHpSlider.value = ratio;
+            if (bossHpText != null)
+                bossHpText.text = $"{_trackedBoss.CurrentHealth} / {_trackedBoss.MaxHealth}";
+        }
+    }
+
+    public void ShowBossHp(BossEnemy boss)
+    {
+        _trackedBoss = boss;
+        if (bossHpGroup != null) bossHpGroup.SetActive(true);
+    }
+
+    public void HideBossHp()
+    {
+        _trackedBoss = null;
+        if (bossHpGroup != null) bossHpGroup.SetActive(false);
     }
 
     public void ShakeHealthBar()
