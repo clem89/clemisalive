@@ -99,6 +99,7 @@ public class Character : MonoBehaviour
 
         Transform spawnPoint = firePoint != null ? firePoint : transform;
         BulletPool.Instance.Get(spawnPoint.position, spawnPoint.rotation, _rtBulletDamage, _rtBulletSpeed, _rtPierceCount);
+        SoundManager.Instance?.Play("PlayerFire");
     }
 
     void HandleDash()
