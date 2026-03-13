@@ -8,10 +8,13 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeText;
     [SerializeField] TextMeshProUGUI killText;
     [SerializeField] Button restartButton;
+    [SerializeField] Button mainMenuButton;
 
     void Awake()
     {
         restartButton.onClick.AddListener(Restart);
+        if (mainMenuButton != null)
+            mainMenuButton.onClick.AddListener(GoToMainMenu);
     }
 
     public void Show(float survivalTime, int killCount)
@@ -27,5 +30,11 @@ public class GameOverUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenuScene");
     }
 }

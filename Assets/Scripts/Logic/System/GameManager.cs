@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     public LevelSystem PlayerLevel { get; private set; }
 
     bool _isGameOver;
+    bool _isBossSpawning;
     float _nextBossTime;
     BossEnemy _activeBoss;
 
@@ -31,6 +33,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _nextBossTime = bossSpawnInterval;
+        gameOverUI.gameObject.SetActive(false);
+        levelUpUI.gameObject.SetActive(false);
+        BossWarningUI.Instance?.gameObject.SetActive(false);
     }
 
     void Update()
@@ -44,18 +49,29 @@ public class GameManager : MonoBehaviour
 
     void CheckBossSpawn()
     {
-        if (_activeBoss != null) return;
+        if (_activeBoss != null || _isBossSpawning) return;
         if (bossPrefab == null) return;
         if (SurvivalTime >= _nextBossTime)
         {
-            SpawnBoss();
+            _isBossSpawning = true;
             _nextBossTime += bossSpawnInterval;
+            SpawnBoss();
         }
     }
 
     void SpawnBoss()
     {
         EnemySpawner.Instance?.SetBossActive(true);
+        StartCoroutine(SpawnBossWithWarning());
+    }
+
+    IEnumerator SpawnBossWithWarning()
+    {
+        BossWarningUI.Instance?.Show();
+        yield return new WaitForSeconds(2.5f);
+
+        _isBossSpawning = false;
+        if (Player == null) yield break;
         Vector2 dir = Random.insideUnitCircle.normalized;
         Vector3 spawnPos = Player.transform.position + (Vector3)(dir * 12f);
         _activeBoss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
