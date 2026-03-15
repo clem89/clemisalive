@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
         gameOverUI.gameObject.SetActive(false);
         levelUpUI.gameObject.SetActive(false);
         BossWarningUI.Instance?.gameObject.SetActive(false);
+
+        // AdsManager는 자체 Awake에서 초기화됨 (별도 호출 불필요)
+        // 필요 시 AdsManager.Instance?.ShowBanner() / HideBanner() 로 제어 가능
     }
 
     void Update()

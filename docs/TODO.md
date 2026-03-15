@@ -6,11 +6,11 @@
 
 ## 🔴 에디터 설정 (코딩 없이 Unity에서 직접)
 
-- [ ] **BossWarningUI** 씬 오브젝트에 `warningText`(TMP), `vignetteImage` 연결
-- [ ] **GameOverUI** 에 `mainMenuButton` 필드 연결
-- [ ] **MainMenuUI** 에 `startButton`, `quitButton` 연결
-- [ ] **Build Settings** 에 MainScene(0), GameScene(1) 순서 등록
-- [ ] **MainScene** 에 MainMenuUI 오브젝트 배치 및 UI 디자인
+- [x] **BossWarningUI** 씬 오브젝트에 `warningText`(TMP), `vignetteImage` 연결
+- [x] **GameOverUI** 에 `mainMenuButton` 필드 연결
+- [x] **MainMenuUI** 에 `startButton`, `quitButton` 연결
+- [x] **Build Settings** 에 MainScene(0), GameScene(1) 순서 등록
+- [x] **MainScene** 에 MainMenuUI 오브젝트 배치 및 UI 디자인
 
 ---
 
@@ -22,7 +22,7 @@
 
 ---
 
-## 🟡 사운드
+## ⚫ 사운드 (최후순위)
 
 - [ ] 효과음 - 적 피격
 - [ ] 효과음 - 적 사망
@@ -37,11 +37,11 @@
 
 ## 🟢 리소스 교체
 
-- [ ] 플레이어 스프라이트 교체 (Kenney 탱크 리소스 활용)
-- [ ] 적 스프라이트 교체
-- [ ] 보스 스프라이트 교체
-- [ ] 총알 스프라이트 교체
-- [ ] 배경 타일 교체 (Environment 리소스 활용)
+- [x] 플레이어 스프라이트 교체 (Kenney 탱크 리소스 활용)
+- [x] 적 스프라이트 교체
+- [x] 보스 스프라이트 교체
+- [x] 총알 스프라이트 교체
+- [ ] 배경 타일 교체 (Environment 리소스 활용) ← 추후
 
 ---
 
@@ -60,6 +60,15 @@
 - [ ] 영구 강화 선택지 설계
 - [ ] 업그레이드 UI
 - [ ] 데이터 저장 (PlayerPrefs or JSON)
+
+---
+
+## 🟤 광고 (Unity Ads)
+
+- [x] AdsManager.cs 구현 (배너 광고)
+- [ ] Unity Dashboard 앱 등록 → Game ID 발급 (Android/iOS)
+- [ ] AdsManager 오브젝트 씬 배치 (MainScene 또는 GameScene)
+- [ ] _testMode = false 로 변경 후 최종 빌드
 
 ---
 
